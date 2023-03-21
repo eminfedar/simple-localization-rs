@@ -1,4 +1,4 @@
-# simple-localization-rs
+# simple-localization
 Simple localization library
 
 ---
