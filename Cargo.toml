@@ -1,0 +1,13 @@
+[package]
+name = "simple-localization"
+description = "Simple localization library for text translation"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+regex = "1.7"
+include_dir = "0.7"
+lazy_static = "1.4.0"

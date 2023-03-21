@@ -1,0 +1,21 @@
+"Hello" => "Merhaba"
+
+"How are you?" => "Nasılsın?"
+
+"This is a long text" => "Bu uzun bir yazı"
+
+#"This is a multiline text.
+
+You can write anything you want here.
+
+Don't need to use \n.
+
+The translation of this is next the quoted text."#
+=>
+#"Bu bir çok satırlı yazı.
+
+Buraya istediğin her şeyi yazabilirsin.
+
+\n kullanman gerekmez.
+
+Bu yazının çevirisi bir sonraki tırnak içindeki yazıdır."#
