@@ -1,8 +1,8 @@
 use std::{collections::HashMap, env};
 
 use include_dir::{include_dir, Dir};
+use lazy_regex::{lazy_regex, Lazy, Regex};
 use lazy_static::lazy_static;
-use regex::Regex;
 
 lazy_static! {
     static ref TRANSLATIONS_HASHMAP: HashMap<&'static str, HashMap<&'static str, &'static str>> = {
@@ -20,22 +20,21 @@ lazy_static! {
     };
 }
 
+static ONE_LINE_REGEX: Lazy<Regex> = lazy_regex!(r#""([\w\W]+?)"\s*=>\s*"([\w\W]+?)""#);
+static MULTI_LINE_REGEX: Lazy<Regex> = lazy_regex!(r#"\#"([\w\W]+?)"\#\s*=>\s*\#"([\w\W]+?)"\#"#);
 
 fn create_translation_hashmap( localization_string: &str ) -> HashMap<&str, &str> {
     let mut translations: HashMap<&str, &str> = HashMap::new();
 
-    let one_line = Regex::new(r#""([\w\W]+?)"\s*=>\s*"([\w\W]+?)""#).unwrap();
-    let multi_line = Regex::new(r#"\#"([\w\W]+?)"\#\s*=>\s*\#"([\w\W]+?)"\#"#).unwrap();
-
     // One line
-    for cap in one_line.captures_iter(localization_string) {
+    for cap in ONE_LINE_REGEX.captures_iter(localization_string) {
         if let (Some(key), Some(value)) = (cap.get(1), cap.get(2)) {
             translations.insert(key.as_str(), value.as_str());
         }
     }
 
     // Multi Line
-    for cap in multi_line.captures_iter(localization_string) {
+    for cap in MULTI_LINE_REGEX.captures_iter(localization_string) {
         if let (Some(key), Some(value)) = (cap.get(1), cap.get(2)) {
             translations.insert(key.as_str(), value.as_str());
         }
