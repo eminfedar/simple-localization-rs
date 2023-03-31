@@ -1,3 +1,46 @@
+//! # simple-localization
+//! ## Build
+//! You should create a `LOCALIZATION_DIR` environment variable to set the path where this crate will look for localization files.
+//! Example build command:
+//! ```bash
+//! LOCALIZATION_DIR=/home/user/Projects/rust_project/localization/ cargo build
+//! ```
+//! Example file tree:
+//! ```bash
+//! ├── Cargo.toml
+//! ├── localization
+//! │   ├── ar_QA # translation files here
+//! │   ├── en_US
+//! │   └── tr_TR
+//! └── src
+//!     └── lib.rs
+//! ```
+//! Example translation file content `tr_TR`:
+//! ```
+//! "Hello" => "Merhaba"
+//! "How are you?" => "Nasılsın?"
+//! "This is a long text" => "Bu uzun bir yazı"
+//! 
+//! #"This is a multiline text.
+//! 
+//! You can write anything you want here.
+//! 
+//! You don't need to use \n to show newlines.
+//! 
+//! The translation of this is next the quoted text."#
+//! =>
+//! #"Bu bir çok satırlı yazı.
+//! 
+//! Buraya istediğin her şeyi yazabilirsin.
+//! 
+//! Yeni satırları göstermek için \n kullanman gerekmez.
+//! 
+//! Bu yazının çevirisi bir sonraki tırnak içindeki yazıdır."#
+//! ```
+//! ## Usage
+//! - Use `tr("Text")` if you want to use user's computer's LANG environment variable(like: `LANG=en_US.UTF-8`) at startup to determine their system language and translate the program to that language.
+//! - Use `trl("Text", "en_US")` if you want to use your own variable to store user's language. For example you can change the program's language by changing the second parameter of `trl` without restarting the app. 
+
 use std::{collections::HashMap, env};
 
 use include_dir::{include_dir, Dir};
@@ -9,7 +52,7 @@ lazy_static! {
         let mut all_translations: HashMap<&'static str, HashMap<&'static str, &'static str>> = HashMap::new();
 
         // Read all files and add them to the hashmap:
-        static LOCALIZATION_DIR__: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/localization");
+        static LOCALIZATION_DIR__: Dir<'_> = include_dir!("$LOCALIZATION_DIR");
         for file in LOCALIZATION_DIR__.files() {
             let translation: HashMap<&'static str, &'static str> = create_translation_hashmap(file.contents_utf8().unwrap());
 
@@ -78,7 +121,7 @@ pub fn trl<'a, 'b>(text: &'a str, lang: &'b str) -> &'a str {
 }
 
 /// Get translation of the `text` in system's language(`env::var("LANG")`)
-/// If translation exists returns the translation
+/// If translation exists returns the translation   
 /// else returns the `text` back.
 /// ```rust,ignore
 /// use simple_localization::tr;
@@ -110,8 +153,6 @@ pub fn tr(text: &str) -> &str {
             return text;
         }
     };
-
-    println!("LANG is: {lang_str}");
 
     trl(text, lang_str)
 }
