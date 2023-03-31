@@ -2,29 +2,33 @@
 Simple localization library
 
 ---
-## Usage
-This directory tree must be in your project:
+## Build
+You should create a `LOCALIZATION_DIR` environment variable to set the path where this crate will look for localization files.
+Example build command:
 ```bash
-├── Cargo.lock
+LOCALIZATION_DIR=/home/user/Projects/rust_project/localization/ cargo build
+```
+Example file tree:
+```bash
 ├── Cargo.toml
 ├── localization
-│   └── tr_TR # Add files here
+│   ├── ar_QA # translation files here
+│   ├── en_US
+│   └── tr_TR
 └── src
     └── lib.rs
 ```
-Inside the localization files *(example: `localization/tr_TR`):*
-```c
-// One Line Example
+Example translation file content `tr_TR`:
+```
 "Hello" => "Merhaba"
 "How are you?" => "Nasılsın?"
 "This is a long text" => "Bu uzun bir yazı"
 
-// Multiline Example
 #"This is a multiline text.
 
 You can write anything you want here.
 
-Don't need to use \n.
+You don't need to use \n to show newlines.
 
 The translation of this is next the quoted text."#
 =>
@@ -32,10 +36,14 @@ The translation of this is next the quoted text."#
 
 Buraya istediğin her şeyi yazabilirsin.
 
-\n kullanman gerekmez.
+Yeni satırları göstermek için \n kullanman gerekmez.
 
 Bu yazının çevirisi bir sonraki tırnak içindeki yazıdır."#
 ```
+## Usage
+- Use `tr("Text")` if you want to use user's computer's LANG environment variable(like: `LANG=en_US.UTF-8`) at startup to determine their system language and translate the program to that language.
+- Use `trl("Text", "en_US")` if you want to use your own variable to store user's language. For example you can change the program's language by changing the second parameter of `trl` without restarting the app. 
+
 `tr()` usage in your `main.rs`:
 ```rust
 use simple_localization::tr;
